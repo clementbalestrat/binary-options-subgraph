@@ -1,0 +1,28 @@
+type Market @entity {
+  id: ID!
+  creator: Bytes!
+  currencyKey: Bytes!
+  strikePrice: BigInt!
+  biddingEndDate: BigInt!
+  maturityDate: BigInt!
+  expiryDate: BigInt!
+  isOpen: Boolean!
+  prices: [BigInt!]
+  poolSize: BigInt
+}
+
+enum OptionTransactionType {
+  Bid
+  Refund
+}
+
+type OptionTransaction @entity {
+  id: ID!
+  timestamp: BigInt!
+  type: OptionTransactionType!
+  account: Bytes!
+  currencyKey: Bytes!
+  side: BigInt!
+  amount: BigInt!
+  market: Bytes!
+}

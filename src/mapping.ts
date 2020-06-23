@@ -33,17 +33,21 @@ export function handleNewBid(event: BidEvent): void {
   entity.account = event.params.account;
   entity.market = event.address;
   entity.currencyKey = marketEntity.currencyKey;
-  entity.side = BigInt.fromI32(event.params.side);
+  entity.side = BigInt.fromI32(event.params.side).toString();
   entity.amount = event.params.value;
   entity.save();
 
-  // marketEntity.prices = binaryOptionContract.prices();
+  marketEntity.longPrice = binaryOptionContract.prices().value0;
+  marketEntity.shortPrice = binaryOptionContract.prices().value1;
+  marketEntity.poolSize = binaryOptionContract.deposited();
   marketEntity.save();
 }
 
 export function handleNewRefund(event: RefundEvent): void {
   let marketId = event.address.toHex();
   let market = Market.load(marketId);
+  let binaryOptionContract = BinaryOptionMarket.bind(event.address);
+  let marketEntity = Market.load(marketId);
   let entity = new OptionTransaction(
     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
   );
@@ -52,7 +56,12 @@ export function handleNewRefund(event: RefundEvent): void {
   entity.account = event.params.account;
   entity.market = event.address;
   entity.currencyKey = market.currencyKey;
-  entity.side = BigInt.fromI32(event.params.side);
+  entity.side = BigInt.fromI32(event.params.side).toString();
   entity.amount = event.params.value;
   entity.save();
+
+  marketEntity.longPrice = binaryOptionContract.prices().value0;
+  marketEntity.shortPrice = binaryOptionContract.prices().value1;
+  marketEntity.poolSize = binaryOptionContract.deposited();
+  marketEntity.save();
 }

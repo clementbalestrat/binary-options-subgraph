@@ -1,0 +1,49 @@
+specVersion: 0.0.2
+description: Synthetix Binary Options API
+repository: https://github.com/clementbalestrat/binary-options-subgraph
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: BinaryOptionMarketManager
+    network: kovan
+    source:
+      address: "0xA07681a27Dd4Db2b60aAc1fB6068aC3E787CB2E7"
+      abi: BinaryOptionMarketManager
+      startBlock: 19145227
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: BinaryOptionMarketManager/BinaryOptionMarketManager.wasm
+      entities:
+        - Market
+      abis:
+        - name: BinaryOptionMarketManager
+          file: BinaryOptionMarketManager/abis/BinaryOptionMarketManager.json
+      eventHandlers:
+        - event: MarketCreated(address,indexed address,indexed
+            bytes32,uint256,uint256,uint256,uint256)
+          handler: handleNewMarket
+templates:
+  - name: BinaryOptionMarket
+    kind: ethereum/contract
+    network: kovan
+    source:
+      abi: BinaryOptionMarket
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: BinaryOptionMarketManager/BinaryOptionMarketManager.wasm
+      entities:
+        - Market
+        - OptionTransaction
+      abis:
+        - name: BinaryOptionMarket
+          file: BinaryOptionMarket/abis/BinaryOptionMarket.json
+      eventHandlers:
+        - event: Bid(uint8,indexed address,uint256)
+          handler: handleNewBid
+        - event: Refund(uint8,indexed address,uint256,uint256)
+          handler: handleNewRefund

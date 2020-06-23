@@ -105,20 +105,37 @@ export class Market extends Entity {
     this.set("isOpen", Value.fromBoolean(value));
   }
 
-  get prices(): Array<BigInt> | null {
-    let value = this.get("prices");
+  get longPrice(): BigInt | null {
+    let value = this.get("longPrice");
     if (value === null) {
       return null;
     } else {
-      return value.toBigIntArray();
+      return value.toBigInt();
     }
   }
 
-  set prices(value: Array<BigInt> | null) {
+  set longPrice(value: BigInt | null) {
     if (value === null) {
-      this.unset("prices");
+      this.unset("longPrice");
     } else {
-      this.set("prices", Value.fromBigIntArray(value as Array<BigInt>));
+      this.set("longPrice", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get shortPrice(): BigInt | null {
+    let value = this.get("shortPrice");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set shortPrice(value: BigInt | null) {
+    if (value === null) {
+      this.unset("shortPrice");
+    } else {
+      this.set("shortPrice", Value.fromBigInt(value as BigInt));
     }
   }
 
@@ -206,13 +223,13 @@ export class OptionTransaction extends Entity {
     this.set("currencyKey", Value.fromBytes(value));
   }
 
-  get side(): BigInt {
+  get side(): string {
     let value = this.get("side");
-    return value.toBigInt();
+    return value.toString();
   }
 
-  set side(value: BigInt) {
-    this.set("side", Value.fromBigInt(value));
+  set side(value: string) {
+    this.set("side", Value.fromString(value));
   }
 
   get amount(): BigInt {

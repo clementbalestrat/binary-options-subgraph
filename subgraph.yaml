@@ -40,6 +40,7 @@ templates:
       entities:
         - Market
         - OptionTransaction
+        - HistoricalOptionPrice
       abis:
         - name: BinaryOptionMarket
           file: ./abis/BinaryOptionMarket.json
@@ -48,3 +49,5 @@ templates:
           handler: handleNewBid
         - event: Refund(uint8,indexed address,uint256,uint256)
           handler: handleNewRefund
+        - event: PricesUpdated(uint256,uint256)
+          handler: handleNewPricesUpdate

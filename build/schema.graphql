@@ -8,9 +8,9 @@ type Market @entity {
   maturityDate: BigInt!
   expiryDate: BigInt!
   isOpen: Boolean!
-  longPrice: BigInt
-  shortPrice: BigInt
-  poolSize: BigInt
+  longPrice: BigInt!
+  shortPrice: BigInt!
+  poolSize: BigInt!
 }
 
 enum OptionTransactionType {
@@ -28,4 +28,13 @@ type OptionTransaction @entity {
   amount: BigInt!
   market: Bytes!
   fee: BigInt
+}
+
+type HistoricalOptionPrice @entity {
+  id: ID!
+  timestamp: BigInt!
+  longPrice: BigInt!
+  shortPrice: BigInt!
+  market: Bytes!
+  poolSize: BigInt!
 }

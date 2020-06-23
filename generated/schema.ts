@@ -114,55 +114,31 @@ export class Market extends Entity {
     this.set("isOpen", Value.fromBoolean(value));
   }
 
-  get longPrice(): BigInt | null {
+  get longPrice(): BigInt {
     let value = this.get("longPrice");
-    if (value === null) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
+    return value.toBigInt();
   }
 
-  set longPrice(value: BigInt | null) {
-    if (value === null) {
-      this.unset("longPrice");
-    } else {
-      this.set("longPrice", Value.fromBigInt(value as BigInt));
-    }
+  set longPrice(value: BigInt) {
+    this.set("longPrice", Value.fromBigInt(value));
   }
 
-  get shortPrice(): BigInt | null {
+  get shortPrice(): BigInt {
     let value = this.get("shortPrice");
-    if (value === null) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
+    return value.toBigInt();
   }
 
-  set shortPrice(value: BigInt | null) {
-    if (value === null) {
-      this.unset("shortPrice");
-    } else {
-      this.set("shortPrice", Value.fromBigInt(value as BigInt));
-    }
+  set shortPrice(value: BigInt) {
+    this.set("shortPrice", Value.fromBigInt(value));
   }
 
-  get poolSize(): BigInt | null {
+  get poolSize(): BigInt {
     let value = this.get("poolSize");
-    if (value === null) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
+    return value.toBigInt();
   }
 
-  set poolSize(value: BigInt | null) {
-    if (value === null) {
-      this.unset("poolSize");
-    } else {
-      this.set("poolSize", Value.fromBigInt(value as BigInt));
-    }
+  set poolSize(value: BigInt) {
+    this.set("poolSize", Value.fromBigInt(value));
   }
 }
 
@@ -274,5 +250,87 @@ export class OptionTransaction extends Entity {
     } else {
       this.set("fee", Value.fromBigInt(value as BigInt));
     }
+  }
+}
+
+export class HistoricalOptionPrice extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id !== null,
+      "Cannot save HistoricalOptionPrice entity without an ID"
+    );
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save HistoricalOptionPrice entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("HistoricalOptionPrice", id.toString(), this);
+  }
+
+  static load(id: string): HistoricalOptionPrice | null {
+    return store.get(
+      "HistoricalOptionPrice",
+      id
+    ) as HistoricalOptionPrice | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get longPrice(): BigInt {
+    let value = this.get("longPrice");
+    return value.toBigInt();
+  }
+
+  set longPrice(value: BigInt) {
+    this.set("longPrice", Value.fromBigInt(value));
+  }
+
+  get shortPrice(): BigInt {
+    let value = this.get("shortPrice");
+    return value.toBigInt();
+  }
+
+  set shortPrice(value: BigInt) {
+    this.set("shortPrice", Value.fromBigInt(value));
+  }
+
+  get market(): Bytes {
+    let value = this.get("market");
+    return value.toBytes();
+  }
+
+  set market(value: Bytes) {
+    this.set("market", Value.fromBytes(value));
+  }
+
+  get poolSize(): BigInt {
+    let value = this.get("poolSize");
+    return value.toBigInt();
+  }
+
+  set poolSize(value: BigInt) {
+    this.set("poolSize", Value.fromBigInt(value));
   }
 }

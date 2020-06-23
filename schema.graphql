@@ -1,5 +1,6 @@
 type Market @entity {
   id: ID!
+  timestamp: BigInt!
   creator: Bytes!
   currencyKey: Bytes!
   strikePrice: BigInt!
@@ -13,8 +14,8 @@ type Market @entity {
 }
 
 enum OptionTransactionType {
-  Bid
-  Refund
+  bid
+  refund
 }
 
 type OptionTransaction @entity {
@@ -26,4 +27,5 @@ type OptionTransaction @entity {
   side: String!
   amount: BigInt!
   market: Bytes!
+  fee: BigInt
 }

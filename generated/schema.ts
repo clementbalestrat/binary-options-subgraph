@@ -42,6 +42,15 @@ export class Market extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
   get creator(): Bytes {
     let value = this.get("creator");
     return value.toBytes();
@@ -248,5 +257,22 @@ export class OptionTransaction extends Entity {
 
   set market(value: Bytes) {
     this.set("market", Value.fromBytes(value));
+  }
+
+  get fee(): BigInt | null {
+    let value = this.get("fee");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set fee(value: BigInt | null) {
+    if (value === null) {
+      this.unset("fee");
+    } else {
+      this.set("fee", Value.fromBigInt(value as BigInt));
+    }
   }
 }

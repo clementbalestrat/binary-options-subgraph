@@ -9,16 +9,23 @@ import { BinaryOptionMarket as BinaryOptionMarketContract } from '../generated/t
 import { BigInt } from '@graphprotocol/graph-ts';
 
 export function handleNewMarket(event: MarketCreatedEvent): void {
+  BinaryOptionMarketContract.create(event.params.market);
+  let binaryOptionContract = BinaryOptionMarket.bind(event.params.market);
+  let prices = binaryOptionContract.prices();
+
   let entity = new Market(event.params.market.toHex());
   entity.creator = event.params.creator;
+  entity.timestamp = event.block.timestamp;
   entity.currencyKey = event.params.oracleKey;
   entity.strikePrice = event.params.strikePrice;
   entity.biddingEndDate = event.params.biddingEndDate;
   entity.maturityDate = event.params.maturityDate;
   entity.expiryDate = event.params.expiryDate;
   entity.isOpen = true;
+  entity.longPrice = prices.value0;
+  entity.shortPrice = prices.value1;
+  entity.poolSize = binaryOptionContract.exercisableDeposits();
   entity.save();
-  BinaryOptionMarketContract.create(event.params.market);
 }
 
 export function handleNewBid(event: BidEvent): void {
@@ -28,7 +35,7 @@ export function handleNewBid(event: BidEvent): void {
   let entity = new OptionTransaction(
     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
   );
-  entity.type = 'Bid';
+  entity.type = 'bid';
   entity.timestamp = event.block.timestamp;
   entity.account = event.params.account;
   entity.market = event.address;
@@ -37,9 +44,10 @@ export function handleNewBid(event: BidEvent): void {
   entity.amount = event.params.value;
   entity.save();
 
-  marketEntity.longPrice = binaryOptionContract.prices().value0;
-  marketEntity.shortPrice = binaryOptionContract.prices().value1;
-  marketEntity.poolSize = binaryOptionContract.deposited();
+  let prices = binaryOptionContract.prices();
+  marketEntity.longPrice = prices.value0;
+  marketEntity.shortPrice = prices.value1;
+  marketEntity.poolSize = binaryOptionContract.exercisableDeposits();
   marketEntity.save();
 }
 
@@ -51,17 +59,19 @@ export function handleNewRefund(event: RefundEvent): void {
   let entity = new OptionTransaction(
     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
   );
-  entity.type = 'Refund';
+  entity.type = 'refund';
   entity.timestamp = event.block.timestamp;
   entity.account = event.params.account;
   entity.market = event.address;
   entity.currencyKey = market.currencyKey;
   entity.side = BigInt.fromI32(event.params.side).toString();
   entity.amount = event.params.value;
+  entity.fee = event.params.fee;
   entity.save();
 
-  marketEntity.longPrice = binaryOptionContract.prices().value0;
-  marketEntity.shortPrice = binaryOptionContract.prices().value1;
-  marketEntity.poolSize = binaryOptionContract.deposited();
+  let prices = binaryOptionContract.prices();
+  marketEntity.longPrice = prices.value0;
+  marketEntity.shortPrice = prices.value1;
+  marketEntity.poolSize = binaryOptionContract.exercisableDeposits();
   marketEntity.save();
 }

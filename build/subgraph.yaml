@@ -21,6 +21,8 @@ dataSources:
       abis:
         - name: BinaryOptionMarketManager
           file: BinaryOptionMarketManager/abis/BinaryOptionMarketManager.json
+        - name: BinaryOptionMarket
+          file: BinaryOptionMarketManager/abis/BinaryOptionMarket.json
       eventHandlers:
         - event: MarketCreated(address,indexed address,indexed
             bytes32,uint256,uint256,uint256,uint256)

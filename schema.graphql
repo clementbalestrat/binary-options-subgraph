@@ -11,6 +11,7 @@ type Market @entity {
   longPrice: BigInt!
   shortPrice: BigInt!
   poolSize: BigInt!
+  result: Int
 }
 
 enum OptionTransactionType {
@@ -24,7 +25,7 @@ type OptionTransaction @entity {
   type: OptionTransactionType!
   account: Bytes!
   currencyKey: Bytes!
-  side: String!
+  side: Int!
   amount: BigInt!
   market: Bytes!
   fee: BigInt

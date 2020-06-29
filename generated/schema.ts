@@ -140,6 +140,15 @@ export class Market extends Entity {
   set poolSize(value: BigInt) {
     this.set("poolSize", Value.fromBigInt(value));
   }
+
+  get result(): i32 {
+    let value = this.get("result");
+    return value.toI32();
+  }
+
+  set result(value: i32) {
+    this.set("result", Value.fromI32(value));
+  }
 }
 
 export class OptionTransaction extends Entity {
@@ -208,13 +217,13 @@ export class OptionTransaction extends Entity {
     this.set("currencyKey", Value.fromBytes(value));
   }
 
-  get side(): string {
+  get side(): i32 {
     let value = this.get("side");
-    return value.toString();
+    return value.toI32();
   }
 
-  set side(value: string) {
-    this.set("side", Value.fromString(value));
+  set side(value: i32) {
+    this.set("side", Value.fromI32(value));
   }
 
   get amount(): BigInt {

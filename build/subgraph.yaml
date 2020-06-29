@@ -8,7 +8,7 @@ dataSources:
     name: BinaryOptionMarketManager
     network: kovan
     source:
-      address: "0xA07681a27Dd4Db2b60aAc1fB6068aC3E787CB2E7"
+      address: "0x9492eac3c8c6F1E768C71Fa2eAf04FB2F42104eC"
       abi: BinaryOptionMarketManager
       startBlock: 19145227
     mapping:
@@ -52,3 +52,5 @@ templates:
           handler: handleNewRefund
         - event: PricesUpdated(uint256,uint256)
           handler: handleNewPricesUpdate
+        - event: MarketResolved(uint8,uint256,uint256,uint256,uint256,uint256)
+          handler: handleMarketResolved

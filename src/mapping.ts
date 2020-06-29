@@ -3,6 +3,7 @@ import {
   Bid as BidEvent,
   Refund as RefundEvent,
   PricesUpdated as PricesUpdatedEvent,
+  MarketResolved as MarketResolvedEvent,
   BinaryOptionMarket,
 } from '../generated/templates/BinaryOptionMarket/BinaryOptionMarket';
 import {
@@ -43,7 +44,7 @@ export function handleNewBid(event: BidEvent): void {
   entity.account = event.params.account;
   entity.market = event.address;
   entity.currencyKey = marketEntity.currencyKey;
-  entity.side = BigInt.fromI32(event.params.side).toString();
+  entity.side = event.params.side;
   entity.amount = event.params.value;
   entity.save();
 }
@@ -58,7 +59,7 @@ export function handleNewRefund(event: RefundEvent): void {
   entity.account = event.params.account;
   entity.market = event.address;
   entity.currencyKey = market.currencyKey;
-  entity.side = BigInt.fromI32(event.params.side).toString();
+  entity.side = event.params.side;
   entity.amount = event.params.value;
   entity.fee = event.params.fee;
   entity.save();
@@ -83,4 +84,11 @@ export function handleNewPricesUpdate(event: PricesUpdatedEvent): void {
   marketEntity.shortPrice = event.params.shortPrice;
   marketEntity.poolSize = poolSize;
   marketEntity.save();
+}
+
+export function handleMarketResolved(event: MarketResolvedEvent): void {
+  let market = Market.load(event.address.toHex());
+  market.result = event.params.result;
+  market.poolSize = event.params.deposited;
+  market.save();
 }
